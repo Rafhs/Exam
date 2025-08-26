@@ -5,3 +5,5 @@ Um sistema desenvolvido em Python com Streamlit para gerenciar o cadastro de fun
 ## 🚀 Sobre o Projeto
 
 Este projeto foi criado como uma ferramenta interna para o departamento de RH, permitindo um controle eficiente dos exames admissionais, periódicos e demissionais, com alertas visuais para os próximos vencimentos.
+
+Iniciando projeto - Escopo
