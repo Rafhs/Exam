@@ -1,18 +1,19 @@
-# database.py
-
 import sqlite3
 from datetime import datetime, timedelta
 import os
 
-DB_DIR = "data"
+# --- LÓGICA DE CAMINHO ATUALIZADA ---
+# Encontra o caminho absoluto para a pasta raiz do projeto subindo dois níveis
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# Aponta para a pasta onde o banco de dados está (usando a recomendação)
+DB_DIR = os.path.join(PROJECT_ROOT, "database_files")
 DB_PATH = os.path.join(DB_DIR, "gestao_rh.db")
-os.makedirs(DB_DIR, exist_ok=True)
 
+os.makedirs(DB_DIR, exist_ok=True)
 
 def create_connection():
     conn = sqlite3.connect(DB_PATH)
     return conn
-
 
 def create_tables():
     conn = create_connection()

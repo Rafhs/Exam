@@ -1,4 +1,4 @@
-/data/gestao.db
+/database_files/gestao.db
 
 .venv
 .venv/
