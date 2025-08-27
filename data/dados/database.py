@@ -19,7 +19,6 @@ def create_tables():
     conn = create_connection()
     cursor = conn.cursor()
 
-    # Tabela de Funcionários
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS funcionarios
                    (
@@ -49,6 +48,8 @@ def create_tables():
                        DATE,
                        empresa
                        TEXT,
+                       cnpj
+                       TEXT, -- Nova coluna para o CNPJ
                        UNIQUE
                    (
                        matricula,
@@ -138,14 +139,14 @@ def create_tables():
     conn.close()
 
 
-def add_funcionario(nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa):
+def add_funcionario(nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj):
     conn = create_connection()
     cursor = conn.cursor()
     try:
         cursor.execute('''
-                       INSERT INTO funcionarios (nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                       ''', (nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa))
+                       INSERT INTO funcionarios (nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                       ''', (nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj))
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -157,7 +158,8 @@ def add_funcionario(nome, cpf, rg, matricula, cargo, departamento, data_admissao
 def get_all_funcionarios():
     conn = create_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, nome, matricula, cargo, empresa FROM funcionarios ORDER BY nome")
+    # Adicionamos a coluna 'cnpj' ao final da consulta
+    cursor.execute("SELECT id, nome, matricula, cargo, empresa, cpf, cnpj FROM funcionarios ORDER BY nome")
     funcionarios = cursor.fetchall()
     conn.close()
     return funcionarios
@@ -288,6 +290,40 @@ def update_funcionario_funcao(funcionario_id, nova_funcao):
         return True
     except Exception as e:
         print(f"Erro ao atualizar função: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_all_funcionarios_for_editing():
+    """
+    Busca todos os funcionários retornando todas as colunas, incluindo o ID,
+    essencial para a edição.
+    """
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj FROM funcionarios ORDER BY nome")
+    funcionarios = cursor.fetchall()
+    conn.close()
+    return funcionarios
+
+
+def update_funcionario_detalhes(func_id, nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj):
+    """
+    Atualiza todas as informações de um funcionário específico usando seu ID.
+    """
+    conn = create_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+                       UPDATE funcionarios
+                       SET nome = ?, cpf = ?, rg = ?, matricula = ?, cargo = ?,
+                           departamento = ?, data_admissao = ?, empresa = ?, cnpj = ?
+                       WHERE id = ?
+                       """, (nome, cpf, rg, matricula, cargo, departamento, data_admissao, empresa, cnpj, func_id))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Erro ao atualizar funcionário: {e}")
         return False
     finally:
         conn.close()
