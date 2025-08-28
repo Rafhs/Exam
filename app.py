@@ -17,5 +17,6 @@ st.info("""
     - **Lançar Exames:** Registrar os exames ocupacionais de cada funcionário.
     - **Gerenciar Funções:** Cadastrar funções e associar os exames necessários.
     - **Exames a Vencer:** Controlar exames vencidos e próximos do vencimento.
+    - **Caso tenha algum sugestão, só sinalizar. Este projeto ainda é uma ideia.
 """)
 st.success(f"Sistema operando normalmente. Data e hora atuais: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
